@@ -1,17 +1,13 @@
-package Tucil1_13521173.src;
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.Image;
-import javax.swing.ImageIcon;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
-import javax.swing.border;
-import javax.imageio.*;
-import java.Image;
-import java.ImageIO;
-import java.ImageIcon;
+import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.border.*;
 
 public class GUI{
     // Constant Data
@@ -21,8 +17,69 @@ public class GUI{
     private static final int buttonWidth = 100;
     private static final int buttonHeight = 90;
 
+    private static Random rand = new Random();
+
+    // Card Data
     private static int cardValue[] = new int[4];
     private static ImageIcon cardPics[] = new ImageIcon[14];
+
+    // Java Swing GUI Element
+    private static JFrame frame = new JFrame("24 Game");
+    private static JButton randomButton = new JButton("Random");
+    private static JButton solveButton = new JButton("Solve");
+    private static JLabel cards[] = new JLabel[4];
+    private static Border border1 = BorderFactory.createLineBorder(Color.black, 1);
+    private static ArrayList<JComboBox<String>> cardPicks = new ArrayList<JComboBox<String>>();
+
+    private static void initFrame(){
+        // Set Card Image
+        int cardGap = cardWidth + 10;
+        for(int i=0;i<4;i++){
+            JLabel card = new JLabel();
+            card.setBounds(50 + cardGap*i, 50, cardWidth, cardHeight);
+            card.setBorder(border1);
+            cards[i] = card;
+        }
+
+        // Set Card Pick List
+        for(int i=0;i<4;i++){
+            String options[] = new String[14];
+            for(int j=0;j<=13;j++){
+                String option;
+                if(j == 0)option = "Empty";
+                else if(j == 1)option = "A";
+                else if(j == 11)option = "Jack";
+                else if(j == 12)option = "Queen";
+                else if(j == 13)option = "King";
+                else option = Integer.toString(j);
+                options[j] = option;
+            }
+            JComboBox<String> optionList = new JComboBox<String>(options);
+            optionList.setBounds(50 + cardGap*i, 260, cardWidth, 50);
+            optionList.addActionListener(pickAction);
+            cardPicks.add(optionList);
+        }
+        
+        // Set Button
+        randomButton.setBounds(650, 50, buttonWidth, buttonHeight);
+        solveButton.setBounds(650, 150, buttonWidth, buttonHeight);
+
+        randomButton.addActionListener(randomAction);
+        solveButton.addActionListener(solveAction);
+
+        // Set Frame
+        for(int i=0;i<4;i++){
+            frame.add(cards[i]);
+            frame.add(cardPicks.get(i));
+        }
+        frame.add(randomButton);
+        frame.add(solveButton);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 500);
+        frame.setResizable(false);
+        frame.setLayout(null);
+        frame.setVisible(true);
+    }
 
     private static void loadCardImage(){
         String folderPath = "img\\simpleCard\\";
@@ -34,50 +91,18 @@ public class GUI{
         }
     }
 
+    private static void reloadFrame(){
+        for(int i=0;i<4;i++){
+            cards[i].setIcon(cardPics[cardValue[i]]);
+            cardPicks.get(i).setSelectedIndex(cardValue[i]);
+        }
+        
+    }
+
     public static void main(String args[]){
         loadCardImage();
-
-        // testing card pic, delete soon
-        Random rand = new Random();
-        for(int i=0;i<4;i++){
-            cardValue[i] = rand.nextInt(14);
-        }
-
-        // Set Border
-        Border border1 = BorderFactory.createLineBorder(Color.black, 1);
-
-        // Set Card Image
-        int cardGap = cardWidth + 10;
-        JLabel cards[] = new JLabel[4];
-        for(int i=0;i<4;i++){
-            JLabel card = new JLabel();
-            card.setIcon(cardPics[cardValue[i]]);
-            card.setBounds(50 + cardGap*i, 50, cardWidth, cardHeight);
-            card.setBorder(border1);
-            cards[i] = card;
-        }
-
-        // Set Button
-        JButton randomButton = new JButton("Random");
-        randomButton.setBounds(650, 50, buttonWidth, buttonHeight);
-
-        JButton solveButton = new JButton("Solve");
-        solveButton.setBounds(650, 150, buttonWidth, buttonHeight);
-        
-        // Set Frame
-        JFrame frame = new JFrame("24 Game");
-
-        for(int i=0;i<4;i++){
-            frame.add(cards[i]);
-        }
-        frame.add(randomButton);
-        frame.add(solveButton);
-        
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 500);
-        frame.setResizable(false);
-        frame.setLayout(null);
-        frame.setVisible(true);
+        initFrame();
+        reloadFrame();
     }
 
     public static BufferedImage readImage(String imagepath){
@@ -95,5 +120,28 @@ public class GUI{
         Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight,  java.awt.Image.SCALE_SMOOTH);  
         return new ImageIcon(resizedImage);
     }
+    
+    private static ActionListener randomAction = new ActionListener(){ 
+        public void actionPerformed(ActionEvent e){ 
+            for(int i=0;i<4;i++){
+                cardValue[i] = rand.nextInt(1, 14);
+            }
+            reloadFrame();
+        } 
+    };
 
+    private static ActionListener solveAction = new ActionListener(){
+        public void actionPerformed(ActionEvent actionEvent){
+            // TODO : Create Action for solve when algorithm is done
+        }
+    };
+
+    private static ActionListener pickAction = new ActionListener(){
+        public void actionPerformed(ActionEvent actionEvent){
+            // TODO : Create Action for picked card
+            // Things to learn
+            // how to get ComboBox source
+            // make logic to get ComboBox index
+        }
+    };
 }
