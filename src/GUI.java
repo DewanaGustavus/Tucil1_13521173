@@ -6,38 +6,52 @@ import javax.swing.ImageIcon;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
-import javax.swing.border.*;
+import javax.swing.border;
 import javax.imageio.*;
-import java.image;
 import java.Image;
 import java.ImageIO;
 import java.ImageIcon;
+import java.util.Random;
 
 public class GUI{
+    // Constant Data
+    private static final int cardWidth = 137;
+    private static final int cardHeight = 200;
+
+    private static final int buttonWidth = 100;
+    private static final int buttonHeight = 90;
+
+    private static int cardValue[] = new int[4];
+    private static ImageIcon cardPics[] = new ImageIcon[14];
+
+    private static void loadCardImage(){
+        String folderPath = "img\\simpleCard\\";
+        for(int i=0;i<=13;i++){
+            String cardPath = folderPath + Integer.toString(i) + ".png";
+            ImageIcon cardPic = new ImageIcon(cardPath);
+            cardPic = resizeIcon(cardPic, cardWidth, cardHeight);
+            cardPics[i] = cardPic;
+        }
+    }
+
     public static void main(String args[]){
-        int cardValue[] = new int[4];
+        loadCardImage();
 
-        // Constant Data
-        int cardWidth = 137;
-        int cardHeight = 200;
-
-        int buttonWidth = 100;
-        int buttonHeight = 90;
+        // testing card pic, delete soon
+        Random rand = new Random();
+        for(int i=0;i<4;i++){
+            cardValue[i] = rand.nextInt(14);
+        }
 
         // Set Border
         Border border1 = BorderFactory.createLineBorder(Color.black, 1);
-
-        // Load Card Image Data
-        String cardPath = "2_of_clubs.png";
-        ImageIcon cardPic = new ImageIcon(cardPath);
-        cardPic = resizeIcon(cardPic, cardWidth, cardHeight);
 
         // Set Card Image
         int cardGap = cardWidth + 10;
         JLabel cards[] = new JLabel[4];
         for(int i=0;i<4;i++){
             JLabel card = new JLabel();
-            card.setIcon(cardPic);
+            card.setIcon(cardPics[cardValue[i]]);
             card.setBounds(50 + cardGap*i, 50, cardWidth, cardHeight);
             card.setBorder(border1);
             cards[i] = card;
@@ -58,6 +72,7 @@ public class GUI{
         }
         frame.add(randomButton);
         frame.add(solveButton);
+        
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 500);
         frame.setResizable(false);
@@ -75,7 +90,7 @@ public class GUI{
         return img;
     }
 
-    private static ImageIcon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
+    public static ImageIcon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
         Image img = icon.getImage();  
         Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight,  java.awt.Image.SCALE_SMOOTH);  
         return new ImageIcon(resizedImage);
