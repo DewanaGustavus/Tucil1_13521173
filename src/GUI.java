@@ -4,9 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.border.*;
@@ -80,7 +77,15 @@ public class GUI{
         setLabel(timeText, Color.black, 15, 550, 475, 250, 50);
         setLabel(solutionLabel, Color.black, 20, 250, 310, 250, 50);
 
-        // TODO Set Solution Area
+        // Set Solution Area
+        solutionArea.setFont(new Font("Times New Roman", Font.PLAIN, 25));
+        solutionArea.setBounds(50, 350, 490, 400);
+        solutionArea.setBorder(border);
+        solutionArea.setEditable(false);
+
+        // TODO add Scroll mechanism
+        // private static JScrollPane verticalScroll = new JScrollPane(solutionArea);
+        // verticalScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         // Set Button
         setButton(randomButton, 650, 50, buttonWidth, buttonHeight, randomAction);
@@ -99,6 +104,7 @@ public class GUI{
         frame.add(timeText);
         frame.add(solutionLabel);
         frame.add(saveButton);
+        frame.add(solutionArea);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 800);
@@ -122,11 +128,13 @@ public class GUI{
         solutionAmountText.setVisible(toggle);
         timeText.setVisible(toggle);
         solutionLabel.setVisible(toggle);
+        solutionArea.setVisible(toggle);
         saveButton.setVisible(toggle);
     }
 
     private static void reloadFrame(){
         toggleAnswerLabel(false);
+        solutionArea.setText(null);
         for(int i=0;i<4;i++){
             cards[i].setIcon(cardPics[cardValue[i]]);
             cardPicks.get(i).setSelectedIndex(cardValue[i]);
@@ -153,7 +161,7 @@ public class GUI{
 
     public static ImageIcon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
         Image img = icon.getImage();  
-        Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight,  java.awt.Image.SCALE_SMOOTH);  
+        Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight, java.awt.Image.SCALE_SMOOTH);  
         return new ImageIcon(resizedImage);
     }
     
@@ -169,6 +177,7 @@ public class GUI{
     private static ActionListener solveAction = new ActionListener(){
         public void actionPerformed(ActionEvent actionEvent){
             // Check if have empty card
+            solutionArea.setText(null);
             boolean haveEmpty = false;
             for(int i=0;i<4;i++){
                 if(cardValue[i] == 0){
@@ -188,6 +197,10 @@ public class GUI{
                 }else{
                     solutionLabel.setText("Solutions");
                     solutionAmountText.setText(Integer.toString(solutionAmount) + " Solution Found");
+                }
+
+                for(int i=0;i<answerList.size();i++){
+                    solutionArea.append(answerList.get(i) + "\n");
                 }
                 long timeEnd = System.nanoTime();
                 executionTime = (timeEnd - timeStart) / 1000;
