@@ -56,6 +56,10 @@ public class Fraction{
         int g = gcd(Math.abs(num), Math.abs(denum));
         num /= g;
         denum /= g;
+        if(num < 0 && denum < 0){
+            num = -num;
+            denum = -denum;
+        }
         a.numerator = num;
         a.denominator = denum;
     }

@@ -115,7 +115,7 @@ public class Solver {
 
     private static boolean checkAnswer(Fraction a){
         Fraction.simplify(a);
-        return (a.numerator == 24) && (a.denominator == 1);
+        return ((a.numerator == 24) && (a.denominator == 1));
     }
 
     public static String convertNumber(int num){
@@ -148,7 +148,18 @@ public class Solver {
             answer += operator[1] + " " +  convertNumber(cardValue[2]) + ") " + operator[2] + " " + convertNumber(cardValue[3]);
             answerList.add(answer);
         }
-        // ! duplicate from above a op1 (b op2 (c op3 d))
+        // a op1 (b op2 (c op3 d)) 
+        // ! duplicate from above but can solve division edge case
+        e = operate(c, d, operator[2]);
+        f = operate(b, e, operator[1]);
+        res = operate(a, f, operator[0]);
+        if(checkAnswer(res)){
+            String answer = new String();
+            answer += convertNumber(cardValue[0]) + " " + operator[0] + " (" + convertNumber(cardValue[1]) + " ";
+            answer += operator[1] + " (" +  convertNumber(cardValue[2]) + " " + operator[2] + " " + convertNumber(cardValue[3]) + "))";
+            answerList.add(answer);
+        }
+        
         // (a op1 b) op2 (c op3 d)
         e = operate(a, b, operator[0]);
         f = operate(c, d, operator[2]);
@@ -203,7 +214,7 @@ public class Solver {
     }
 
     public static void main(String args[]){
-        int arr[] = {1,8,9,12};
+        int arr[] = {1,3,4,6};
         solve(arr);
         System.out.println(answerList.size());
     }
