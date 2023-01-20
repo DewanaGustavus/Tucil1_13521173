@@ -44,7 +44,7 @@ public class GUI{
     private static JLabel solutionLabel = new JLabel();
     private static JTextArea solutionArea = new JTextArea();
     private static JButton saveButton = new JButton("Save");
-    private static JScrollPane verticalScroll = new JScrollPane(solutionArea); // ? minor bug : scroll start from bottom
+    private static JScrollPane verticalScroll = new JScrollPane(solutionArea);
 
     private static void initFrame(){
         // Set Card Image
@@ -204,6 +204,7 @@ public class GUI{
                 long timeEnd = System.nanoTime();
                 executionTime = (timeEnd - timeStart) / 1000;
                 timeText.setText("Execution Time : " + Long.toString(executionTime) + " microseconds");
+                solutionArea.setCaretPosition(0);
                 
                 toggleAnswerLabel(true);
                 emptyCardText.setVisible(false);
