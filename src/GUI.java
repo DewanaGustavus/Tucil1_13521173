@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.border.*;
@@ -72,7 +74,7 @@ public class GUI{
         }
         
         // Set Label
-        setLabel(emptyCardText, Color.red, 10, 650, 230, buttonWidth + 5, 20);
+        setLabel(emptyCardText, Color.red, 12, 650, 230, buttonWidth + 20, 20);
         setLabel(solutionAmountText, Color.black, 20, 575, 450, 200, 50);
         setLabel(timeText, Color.black, 15, 550, 475, 250, 50);
         setLabel(solutionLabel, Color.black, 20, 250, 310, 250, 50);
@@ -224,7 +226,40 @@ public class GUI{
 
     private static ActionListener saveAction = new ActionListener(){
         public void actionPerformed(ActionEvent actionEvent){
-            // TODO
+            JFileChooser dialog = new JFileChooser();
+            int choice = dialog.showSaveDialog(null);
+            if (choice == JFileChooser.APPROVE_OPTION) {
+                String filepath = dialog.getSelectedFile().getAbsolutePath();
+                writeToFile(filepath);
+            }
         }
     };
+
+    private static void writeToFile(String filepath){
+        try{
+            FileWriter fstream = new FileWriter(filepath,true);
+            BufferedWriter out = new BufferedWriter(fstream);
+            out.write("24 Game Solution\n");
+            out.write("Used Card : \n");
+            for(int i=0;i<4;i++){
+                out.write(Solver.convertNumber(cardValue[i]));
+                out.write(" ");
+            }
+            out.write("\n\n");
+            out.write("Execution Time : " + Long.toString(executionTime) + " microseconds\n");
+            int solutionAmount = answerList.size();
+            if(solutionAmount > 0){
+                out.write(Integer.toString(solutionAmount) + " Solution Found\n\n");
+                out.write("Solutions : \n");
+                for(int i=0;i<solutionAmount;i++){
+                    out.write(answerList.get(i) + "\n");
+                }
+            }else{
+                out.write("No Solution");
+            }
+            out.close();
+        }catch (Exception e){
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
 }

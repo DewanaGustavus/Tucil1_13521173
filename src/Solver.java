@@ -118,7 +118,7 @@ public class Solver {
         return (a.numerator == 24) && (a.denominator == 1);
     }
 
-    private static String convertNumber(int num){
+    public static String convertNumber(int num){
         String name;
         if(num == 1)name = "A";
         else if(num == 11)name = "J";
