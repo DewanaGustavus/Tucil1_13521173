@@ -44,6 +44,7 @@ public class GUI{
     private static JLabel solutionLabel = new JLabel();
     private static JTextArea solutionArea = new JTextArea();
     private static JButton saveButton = new JButton("Save");
+    private static JScrollPane verticalScroll = new JScrollPane(solutionArea); // ? minor bug : scroll start from bottom
 
     private static void initFrame(){
         // Set Card Image
@@ -81,13 +82,10 @@ public class GUI{
 
         // Set Solution Area
         solutionArea.setFont(new Font("Times New Roman", Font.PLAIN, 25));
-        solutionArea.setBounds(50, 350, 490, 400);
         solutionArea.setBorder(border);
         solutionArea.setEditable(false);
-
-        // TODO add Scroll mechanism
-        // private static JScrollPane verticalScroll = new JScrollPane(solutionArea);
-        // verticalScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        verticalScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        verticalScroll.setBounds(50, 350, 490, 400);
 
         // Set Button
         setButton(randomButton, 650, 50, buttonWidth, buttonHeight, randomAction);
@@ -106,7 +104,7 @@ public class GUI{
         frame.add(timeText);
         frame.add(solutionLabel);
         frame.add(saveButton);
-        frame.add(solutionArea);
+        frame.add(verticalScroll);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 800);
@@ -130,7 +128,6 @@ public class GUI{
         solutionAmountText.setVisible(toggle);
         timeText.setVisible(toggle);
         solutionLabel.setVisible(toggle);
-        solutionArea.setVisible(toggle);
         saveButton.setVisible(toggle);
     }
 
