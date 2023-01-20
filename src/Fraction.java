@@ -1,6 +1,7 @@
+package src;
 import java.lang.Math;
 
-public class Fraction {
+public class Fraction{
     public int numerator;
     public int denominator;
 
@@ -49,7 +50,7 @@ public class Fraction {
         return c;
     }
 
-    private static void simplify(Fraction a){
+    public static void simplify(Fraction a){
         int num = a.numerator;
         int denum = a.denominator;
         int g = gcd(Math.abs(num), Math.abs(denum));
