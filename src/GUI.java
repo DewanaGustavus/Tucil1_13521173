@@ -34,7 +34,8 @@ public class GUI{
     private static JLabel emptyCardText = new JLabel();
     private static Border border = BorderFactory.createLineBorder(Color.black, 1);
     private static ArrayList<JComboBox<String>> cardPicks = new ArrayList<JComboBox<String>>();
-    private static JLabel solutionText= new JLabel();
+    private static JLabel solutionText = new JLabel();
+    private static JLabel timeText = new JLabel();
 
     private static void initFrame(){
         // Set Card Image
@@ -72,11 +73,17 @@ public class GUI{
         emptyCardText.setOpaque(false);
 
         // Set Label for display how much solution
-        solutionText.setText("No Solution Found");
         solutionText.setForeground(Color.black);
         solutionText.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         solutionText.setBounds(250, 310, 200, 50);
         solutionText.setOpaque(false);
+
+        // Set Label for execution time
+        timeText.setText("No Solution Found");
+        timeText.setForeground(Color.black);
+        timeText.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        timeText.setBounds(250, 335, 200, 50);
+        timeText.setOpaque(false);
 
         // Set Button
         randomButton.setBounds(650, 50, buttonWidth, buttonHeight);
@@ -94,6 +101,7 @@ public class GUI{
         frame.add(solveButton);
         frame.add(emptyCardText);
         frame.add(solutionText);
+        frame.add(timeText);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 800);
@@ -114,7 +122,8 @@ public class GUI{
 
     private static void reloadFrame(){
         emptyCardText.setVisible(false);
-        // solutionText.setVisible(true);
+        solutionText.setVisible(false);
+        timeText.setVisible(false);
         for(int i=0;i<4;i++){
             cards[i].setIcon(cardPics[cardValue[i]]);
             cardPicks.get(i).setSelectedIndex(cardValue[i]);
@@ -165,7 +174,7 @@ public class GUI{
             if(haveEmpty){
                 emptyCardText.setVisible(true);
             }else{
-                // TODO : Create Action for solve when algorithm is done
+                long timeStart = System.currentTimeMillis();
                 ArrayList<String> answerList = Solver.solve(cardValue);
                 int solutionAmount = answerList.size();
                 if(solutionAmount == 0){
@@ -173,6 +182,10 @@ public class GUI{
                 }else{
                     solutionText.setText(Integer.toString(solutionAmount) + " Solution Found");
                 }
+                long timeEnd = System.currentTimeMillis();
+                long executionTime = timeEnd - timeStart;
+                timeText.setText("Execution Time : " + Long.toString(executionTime) + " ms");
+                timeText.setVisible(true);
                 solutionText.setVisible(true);;
             }
         }
