@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -13,9 +14,10 @@ public class GUI{
     // Constant Data
     private static final int cardWidth = 137;
     private static final int cardHeight = 200;
+    private static final int cardGap = cardWidth + 10;
 
     private static final int buttonWidth = 100;
-    private static final int buttonHeight = 90;
+    private static final int buttonHeight = 70;
 
     private static Random rand = new Random();
 
@@ -28,16 +30,16 @@ public class GUI{
     private static JButton randomButton = new JButton("Random");
     private static JButton solveButton = new JButton("Solve");
     private static JLabel cards[] = new JLabel[4];
-    private static Border border1 = BorderFactory.createLineBorder(Color.black, 1);
+    private static JLabel emptyCardText = new JLabel();
+    private static Border border = BorderFactory.createLineBorder(Color.black, 1);
     private static ArrayList<JComboBox<String>> cardPicks = new ArrayList<JComboBox<String>>();
 
     private static void initFrame(){
         // Set Card Image
-        int cardGap = cardWidth + 10;
         for(int i=0;i<4;i++){
             JLabel card = new JLabel();
             card.setBounds(50 + cardGap*i, 50, cardWidth, cardHeight);
-            card.setBorder(border1);
+            card.setBorder(border);
             cards[i] = card;
         }
 
@@ -47,7 +49,7 @@ public class GUI{
             for(int j=0;j<=13;j++){
                 String option;
                 if(j == 0)option = "Empty";
-                else if(j == 1)option = "A";
+                else if(j == 1)option = "As";
                 else if(j == 11)option = "Jack";
                 else if(j == 12)option = "Queen";
                 else if(j == 13)option = "King";
@@ -60,6 +62,14 @@ public class GUI{
             cardPicks.add(optionList);
         }
         
+        // Set Label for empty card solve button
+        // ! make better word for warning
+        emptyCardText.setText("Cannot use empty card!");
+        emptyCardText.setForeground(Color.red);
+        emptyCardText.setFont(new Font("Times New Roman", Font.PLAIN, 10));
+        emptyCardText.setBounds(650, 230, buttonWidth + 5, 20);
+        emptyCardText.setOpaque(false);
+
         // Set Button
         randomButton.setBounds(650, 50, buttonWidth, buttonHeight);
         solveButton.setBounds(650, 150, buttonWidth, buttonHeight);
@@ -74,6 +84,7 @@ public class GUI{
         }
         frame.add(randomButton);
         frame.add(solveButton);
+        frame.add(emptyCardText);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 500);
         frame.setResizable(false);
@@ -92,11 +103,11 @@ public class GUI{
     }
 
     private static void reloadFrame(){
+        emptyCardText.setVisible(false);
         for(int i=0;i<4;i++){
             cards[i].setIcon(cardPics[cardValue[i]]);
             cardPicks.get(i).setSelectedIndex(cardValue[i]);
         }
-        
     }
 
     public static void main(String args[]){
@@ -132,16 +143,29 @@ public class GUI{
 
     private static ActionListener solveAction = new ActionListener(){
         public void actionPerformed(ActionEvent actionEvent){
-            // TODO : Create Action for solve when algorithm is done
+            // Check if have empty card
+            boolean haveEmpty = false;
+            for(int i=0;i<4;i++){
+                if(cardValue[i] == 0){
+                    haveEmpty = true;
+                }
+            }
+
+            if(haveEmpty){
+                emptyCardText.setVisible(true);
+            }else{
+                // TODO : Create Action for solve when algorithm is done
+            }
         }
     };
 
     private static ActionListener pickAction = new ActionListener(){
         public void actionPerformed(ActionEvent actionEvent){
-            // TODO : Create Action for picked card
-            // Things to learn
-            // how to get ComboBox source
-            // make logic to get ComboBox index
+            JComboBox<String> pickBox = (JComboBox) actionEvent.getSource();
+            int pickBoxCoordinate = pickBox.getX();
+            int index = (pickBoxCoordinate - 50) / cardGap;
+            cardValue[index] = pickBox.getSelectedIndex();
+            reloadFrame();
         }
     };
 }
