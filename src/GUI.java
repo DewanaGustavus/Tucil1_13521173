@@ -26,16 +26,25 @@ public class GUI{
     private static int cardValue[] = new int[4];
     private static ImageIcon cardPics[] = new ImageIcon[14];
 
+    // Solver Data
+    private static ArrayList<String> answerList = new ArrayList<String>();
+    private static long executionTime;
+
     // Java Swing GUI Element
+    private static Border border = BorderFactory.createLineBorder(Color.black, 1);
     private static JFrame frame = new JFrame("24 Game");
     private static JButton randomButton = new JButton("Random");
     private static JButton solveButton = new JButton("Solve");
     private static JLabel cards[] = new JLabel[4];
-    private static JLabel emptyCardText = new JLabel();
-    private static Border border = BorderFactory.createLineBorder(Color.black, 1);
     private static ArrayList<JComboBox<String>> cardPicks = new ArrayList<JComboBox<String>>();
-    private static JLabel solutionText = new JLabel();
+
+    // GUI Element that displayed after solve button clicked
+    private static JLabel emptyCardText = new JLabel("Cannot use empty card!");
+    private static JLabel solutionAmountText = new JLabel();
     private static JLabel timeText = new JLabel();
+    private static JLabel solutionLabel = new JLabel();
+    private static JTextArea solutionArea = new JTextArea();
+    private static JButton saveButton = new JButton("Save");
 
     private static void initFrame(){
         // Set Card Image
@@ -65,32 +74,18 @@ public class GUI{
             cardPicks.add(optionList);
         }
         
-        // Set Label for empty card solve button
-        emptyCardText.setText("Cannot use empty card!");
-        emptyCardText.setForeground(Color.red);
-        emptyCardText.setFont(new Font("Times New Roman", Font.PLAIN, 10));
-        emptyCardText.setBounds(650, 230, buttonWidth + 5, 20);
-        emptyCardText.setOpaque(false);
+        // Set Label
+        setLabel(emptyCardText, Color.red, 10, 650, 230, buttonWidth + 5, 20);
+        setLabel(solutionAmountText, Color.black, 20, 575, 450, 200, 50);
+        setLabel(timeText, Color.black, 15, 550, 475, 250, 50);
+        setLabel(solutionLabel, Color.black, 20, 250, 310, 250, 50);
 
-        // Set Label for display how much solution
-        solutionText.setForeground(Color.black);
-        solutionText.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        solutionText.setBounds(250, 310, 200, 50);
-        solutionText.setOpaque(false);
-
-        // Set Label for execution time
-        timeText.setText("No Solution Found");
-        timeText.setForeground(Color.black);
-        timeText.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-        timeText.setBounds(250, 335, 200, 50);
-        timeText.setOpaque(false);
+        // TODO Set Solution Area
 
         // Set Button
-        randomButton.setBounds(650, 50, buttonWidth, buttonHeight);
-        solveButton.setBounds(650, 150, buttonWidth, buttonHeight);
-
-        randomButton.addActionListener(randomAction);
-        solveButton.addActionListener(solveAction);
+        setButton(randomButton, 650, 50, buttonWidth, buttonHeight, randomAction);
+        setButton(solveButton, 650, 150, buttonWidth, buttonHeight, solveAction);
+        setButton(saveButton, 605, 375, buttonWidth, buttonHeight, saveAction);
 
         // Set Frame
         for(int i=0;i<4;i++){
@@ -100,8 +95,10 @@ public class GUI{
         frame.add(randomButton);
         frame.add(solveButton);
         frame.add(emptyCardText);
-        frame.add(solutionText);
+        frame.add(solutionAmountText);
         frame.add(timeText);
+        frame.add(solutionLabel);
+        frame.add(saveButton);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 800);
@@ -120,30 +117,38 @@ public class GUI{
         }
     }
 
+    private static void toggleAnswerLabel(boolean toggle){
+        emptyCardText.setVisible(toggle);
+        solutionAmountText.setVisible(toggle);
+        timeText.setVisible(toggle);
+        solutionLabel.setVisible(toggle);
+        saveButton.setVisible(toggle);
+    }
+
     private static void reloadFrame(){
-        emptyCardText.setVisible(false);
-        solutionText.setVisible(false);
-        timeText.setVisible(false);
+        toggleAnswerLabel(false);
         for(int i=0;i<4;i++){
             cards[i].setIcon(cardPics[cardValue[i]]);
             cardPicks.get(i).setSelectedIndex(cardValue[i]);
         }
     }
 
+    private static void setLabel(JLabel label, Color color, int fontsize, int x, int y, int width, int height){
+        label.setForeground(color);
+        label.setFont(new Font("Times New Roman", Font.PLAIN, fontsize));
+        label.setBounds(x, y, width, height);
+        label.setOpaque(false);
+    }
+
+    private static void setButton(JButton button, int x, int y, int width, int height, ActionListener action){
+        button.setBounds(x, y, width, height);
+        button.addActionListener(action);
+    }
+
     public static void main(String args[]){
         loadCardImage();
         initFrame();
         reloadFrame();
-    }
-
-    public static BufferedImage readImage(String imagepath){
-        BufferedImage img = null;
-        try{
-            img = ImageIO.read(new File(imagepath));
-        } catch(Exception e) {
-            System.out.println("Image not found");
-        }
-        return img;
     }
 
     public static ImageIcon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
@@ -174,19 +179,22 @@ public class GUI{
             if(haveEmpty){
                 emptyCardText.setVisible(true);
             }else{
-                long timeStart = System.currentTimeMillis();
-                ArrayList<String> answerList = Solver.solve(cardValue);
+                long timeStart = System.nanoTime();
+                answerList = Solver.solve(cardValue);
                 int solutionAmount = answerList.size();
                 if(solutionAmount == 0){
-                    solutionText.setText("No Solution Found");
+                    solutionLabel.setText("No Solution");
+                    solutionAmountText.setText("No Solution Found");
                 }else{
-                    solutionText.setText(Integer.toString(solutionAmount) + " Solution Found");
+                    solutionLabel.setText("Solutions");
+                    solutionAmountText.setText(Integer.toString(solutionAmount) + " Solution Found");
                 }
-                long timeEnd = System.currentTimeMillis();
-                long executionTime = timeEnd - timeStart;
-                timeText.setText("Execution Time : " + Long.toString(executionTime) + " ms");
-                timeText.setVisible(true);
-                solutionText.setVisible(true);;
+                long timeEnd = System.nanoTime();
+                executionTime = (timeEnd - timeStart) / 1000;
+                timeText.setText("Execution Time : " + Long.toString(executionTime) + " microseconds");
+                
+                toggleAnswerLabel(true);
+                emptyCardText.setVisible(false);
             }
         }
     };
@@ -198,6 +206,12 @@ public class GUI{
             int index = (pickBoxCoordinate - 50) / cardGap;
             cardValue[index] = pickBox.getSelectedIndex();
             reloadFrame();
+        }
+    };
+
+    private static ActionListener saveAction = new ActionListener(){
+        public void actionPerformed(ActionEvent actionEvent){
+            // TODO
         }
     };
 }

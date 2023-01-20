@@ -184,9 +184,9 @@ public class Solver {
     }
 
     public static ArrayList<String> solve(int[] cardValue){
-
-        countingSort(cardValue);
-        generatePermutation(cardValue, 0);
+        int copyCard[] = copyArrayInt(cardValue);
+        countingSort(copyCard);
+        generatePermutation(copyCard, 0);
         generateOperatorCombination(new char[3], 0);
 
         for(int i=0;i<permutation.size();i++){
