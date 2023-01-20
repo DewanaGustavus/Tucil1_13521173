@@ -146,7 +146,6 @@ public class Solver {
             String answer = new String();
             answer += "((" + convertNumber(cardValue[0]) + " " + operator[0] + " " + convertNumber(cardValue[1]) + ") ";
             answer += operator[1] + " " +  convertNumber(cardValue[2]) + ") " + operator[2] + " " + convertNumber(cardValue[3]);
-            System.out.println(answer);
             answerList.add(answer);
         }
         // ! duplicate from above a op1 (b op2 (c op3 d))
@@ -158,7 +157,6 @@ public class Solver {
             String answer = new String();
             answer += "(" + convertNumber(cardValue[0]) + " " + operator[0] + " " + convertNumber(cardValue[1]) + ") ";
             answer += operator[1] + " (" +  convertNumber(cardValue[2]) + " " + operator[2] + " " + convertNumber(cardValue[3]) + ")";
-            System.out.println(answer);
             answerList.add(answer);
         }
         
@@ -170,7 +168,6 @@ public class Solver {
             String answer = new String();
             answer += convertNumber(cardValue[0]) + " " + operator[0] + " ((" + convertNumber(cardValue[1]) + " ";
             answer += operator[1] + " " +  convertNumber(cardValue[2]) + ") "+ operator[2] + " " + convertNumber(cardValue[3]) + ")";
-            System.out.println(answer);
             answerList.add(answer);
         }
         
@@ -182,7 +179,6 @@ public class Solver {
             String answer = new String();
             answer += "(" + convertNumber(cardValue[0]) + " " + operator[0] + " (" + convertNumber(cardValue[1]) + " ";
             answer += operator[1] + " " + convertNumber(cardValue[2]) + ")) " + operator[2] + " " + convertNumber(cardValue[3]);
-            System.out.println(answer);
             answerList.add(answer);
         }
     }
@@ -198,8 +194,12 @@ public class Solver {
                 getAnswer(permutation.get(i), operations.get(j));
             }
         }
-
-        return answerList;
+        
+        ArrayList<String> answerCopy = new ArrayList<String>(answerList);
+        answerList.clear();
+        permutation.clear();
+        operations.clear();
+        return answerCopy;
     }
 
     public static void main(String args[]){

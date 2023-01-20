@@ -1,3 +1,4 @@
+package src;
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.Font;
@@ -33,6 +34,7 @@ public class GUI{
     private static JLabel emptyCardText = new JLabel();
     private static Border border = BorderFactory.createLineBorder(Color.black, 1);
     private static ArrayList<JComboBox<String>> cardPicks = new ArrayList<JComboBox<String>>();
+    private static JLabel solutionText= new JLabel();
 
     private static void initFrame(){
         // Set Card Image
@@ -63,12 +65,18 @@ public class GUI{
         }
         
         // Set Label for empty card solve button
-        // ! make better word for warning
         emptyCardText.setText("Cannot use empty card!");
         emptyCardText.setForeground(Color.red);
         emptyCardText.setFont(new Font("Times New Roman", Font.PLAIN, 10));
         emptyCardText.setBounds(650, 230, buttonWidth + 5, 20);
         emptyCardText.setOpaque(false);
+
+        // Set Label for display how much solution
+        solutionText.setText("No Solution Found");
+        solutionText.setForeground(Color.black);
+        solutionText.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        solutionText.setBounds(250, 310, 200, 50);
+        solutionText.setOpaque(false);
 
         // Set Button
         randomButton.setBounds(650, 50, buttonWidth, buttonHeight);
@@ -85,15 +93,17 @@ public class GUI{
         frame.add(randomButton);
         frame.add(solveButton);
         frame.add(emptyCardText);
+        frame.add(solutionText);
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 500);
+        frame.setSize(800, 800);
         frame.setResizable(false);
         frame.setLayout(null);
         frame.setVisible(true);
     }
 
     private static void loadCardImage(){
-        String folderPath = "img\\simpleCard\\";
+        String folderPath = "src\\img\\simpleCard\\";
         for(int i=0;i<=13;i++){
             String cardPath = folderPath + Integer.toString(i) + ".png";
             ImageIcon cardPic = new ImageIcon(cardPath);
@@ -104,6 +114,7 @@ public class GUI{
 
     private static void reloadFrame(){
         emptyCardText.setVisible(false);
+        // solutionText.setVisible(true);
         for(int i=0;i<4;i++){
             cards[i].setIcon(cardPics[cardValue[i]]);
             cardPicks.get(i).setSelectedIndex(cardValue[i]);
@@ -132,7 +143,7 @@ public class GUI{
         return new ImageIcon(resizedImage);
     }
     
-    private static ActionListener randomAction = new ActionListener(){ 
+    private static ActionListener randomAction = new ActionListener(){
         public void actionPerformed(ActionEvent e){ 
             for(int i=0;i<4;i++){
                 cardValue[i] = rand.nextInt(1, 14);
@@ -155,6 +166,14 @@ public class GUI{
                 emptyCardText.setVisible(true);
             }else{
                 // TODO : Create Action for solve when algorithm is done
+                ArrayList<String> answerList = Solver.solve(cardValue);
+                int solutionAmount = answerList.size();
+                if(solutionAmount == 0){
+                    solutionText.setText("No Solution Found");
+                }else{
+                    solutionText.setText(Integer.toString(solutionAmount) + " Solution Found");
+                }
+                solutionText.setVisible(true);;
             }
         }
     };
