@@ -114,10 +114,10 @@ public class GUI{
     }
 
     private static void loadCardImage(){
-        String folderPath = "src\\img\\simpleCard\\";
+        String folderPath = "img/simpleCard/";
         for(int i=0;i<=13;i++){
             String cardPath = folderPath + Integer.toString(i) + ".png";
-            ImageIcon cardPic = new ImageIcon(cardPath);
+            ImageIcon cardPic = new ImageIcon(GUI.class.getResource(cardPath));
             cardPic = resizeIcon(cardPic, cardWidth, cardHeight);
             cardPics[i] = cardPic;
         }
@@ -214,6 +214,7 @@ public class GUI{
 
     private static ActionListener pickAction = new ActionListener(){
         public void actionPerformed(ActionEvent actionEvent){
+            @SuppressWarnings("unchecked")
             JComboBox<String> pickBox = (JComboBox) actionEvent.getSource();
             int pickBoxCoordinate = pickBox.getX();
             int index = (pickBoxCoordinate - 50) / cardGap;
