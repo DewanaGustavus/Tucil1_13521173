@@ -167,7 +167,7 @@ public class GUI{
     private static ActionListener randomAction = new ActionListener(){
         public void actionPerformed(ActionEvent e){ 
             for(int i=0;i<4;i++){
-                cardValue[i] = rand.nextInt(1, 14);
+                cardValue[i] = rand.nextInt(13) + 1;
             }
             reloadFrame();
         } 
