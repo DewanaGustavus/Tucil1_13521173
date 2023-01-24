@@ -8,6 +8,16 @@
 
 ### Deskripsi Program
 
+Prosedur algoritma bruteforce yang digunakan untuk menyelesaikan masalah adalah sebagai berikut:
+
+1. Urutkan kartu sebelum mencari seluruh permutasi kartu
+2. Simpan seluruh permutasi kartu yang mungkin
+3. Cari dan simpan seluruh kombinasi operasi yang mungkin
+4. Iterasi seluruh permutasi kartu
+5. Untuk setiap permutasi kartu, Iterasi kombinasi operasi
+6. Untuk setiap kombinasi operasi, Iterasi Seluruh kemungkinan urutan melakukan operasi
+7. Simpan solusi pada sebuah list yang berisi string yang menyatakan bagaimana susunan kartu serta operasi dan urutan operasi yang digunakan sehingga dapat menghasilkan angka 24.
+
 ### Requirement Program
 
 - Agar dapat menjalankan program dibutuhkan java dengan versi 18.0.2.1 keatas.
@@ -129,6 +139,7 @@ zip bin/game.jar META-INF/MANIFEST.MF
 - Setelah seluruh langkah dilakukan executable sudah berhasil dibuat.
 
 ### Cara Menggunakan Program
+
 - Untuk memilih kartu yang digunakan dapat menggunakan tombol random apabila ingin memilih kartu secara acak, atau dapat juga memilih kartu secara spesifik dengan mengubah nilai kartu dengan list yang berada dibawah gambar kartu.
 
 ![](https://cdn.discordapp.com/attachments/702842263704961064/1067024748447547432/image.png)

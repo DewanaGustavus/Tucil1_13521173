@@ -1,0 +1,9 @@
+24 Game Solution
+Used Card : 
+2 3 5 Q 
+
+Execution Time : 5396 microseconds
+1 Solution Found
+
+Solutions : 
+Q / (3 - (5 / 2))

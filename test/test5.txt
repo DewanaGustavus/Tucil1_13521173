@@ -1,0 +1,9 @@
+24 Game Solution
+Used Card : 
+A 3 4 6 
+
+Execution Time : 1824 microseconds
+1 Solution Found
+
+Solutions : 
+6 / (A - (3 / 4))
